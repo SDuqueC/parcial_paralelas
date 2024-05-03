@@ -7,19 +7,21 @@ import extraer_audio
 
 urls_y_nombres = lector_json.leer_json('urls_y_nombres.json')
 
-# video = '.webm'
-# audio = '.mp3'
-
 for url_y_nombre in urls_y_nombres:
-    video = url_y_nombre[1] + '.webm'
-    audio = url_y_nombre[1] + '.mp3'
 
-    descarga_video.download_video(url_y_nombre[0], url_y_nombre[1])
+    for numero_de_video in range(1, 6):
 
-    extraer_audio.extract_audio(video, audio)
+        numero_de_video_str = str(numero_de_video)
+        video = url_y_nombre[1] + numero_de_video_str
 
-    archivo = video
+        descarga_video.download_video(url_y_nombre[0], video, numero_de_video_str)
 
-    os.remove(archivo)
-    print(f"El video {video} ha sido eliminado correctamente.")
-    
+        video = video + '.webm'
+        audio = url_y_nombre[1] + numero_de_video_str + '.mp3'
+
+        extraer_audio.extract_audio(video, audio)
+
+        archivo = video
+
+        os.remove(archivo)
+        print(f"El video {video} ha sido eliminado correctamente.")
