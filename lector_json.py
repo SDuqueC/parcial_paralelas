@@ -1,6 +1,6 @@
 import json
 
-def leer_urls_desde_json(archivo):
+def leer_json(archivo):
     """
     Lee las URLs de video desde un archivo JSON y las devuelve como una lista.
     
@@ -13,8 +13,8 @@ def leer_urls_desde_json(archivo):
     try:
         with open(archivo, 'r') as f:
             data = json.load(f)
-            urls = [video["url"] for video in data["videos"]]
-        return urls
+            urls_y_nombres = [(video["url"], video["nombre"]) for video in data["videos"]]
+        return urls_y_nombres
     except FileNotFoundError:
         print("Error: El archivo JSON no se encontró.")
         return []

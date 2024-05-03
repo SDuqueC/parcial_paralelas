@@ -12,13 +12,7 @@ def extract_audio(video_entrada, audio_salida):
     - bool: True si la extracción fue exitosa, False en caso contrario.
     """
     try:
-        # proceso = None
-        # # Ejecutar el comando ffmpeg para extraer el audio
-        # try:
-        #     proceso = subprocess.run(['ffmpeg', '-i', video_entrada, '-vn', '-acodec', 'copy', audio_salida], capture_output=True, text=True)
-        # except FileNotFoundError:
-        #     proceso = subprocess.run(['ffmpeg', '-i', video_entrada, '-vn', '-acodec', 'libmp3lame', '-q:a', '2', audio_salida], capture_output=True, text=True)
-
+        # Ejecutar el comando ffmpeg para extraer el audio
         proceso = subprocess.run(['ffmpeg', '-i', video_entrada, '-vn', '-acodec', 'libmp3lame', '-q:a', '2', audio_salida], capture_output=True, text=True)
 
         if proceso.returncode == 0:

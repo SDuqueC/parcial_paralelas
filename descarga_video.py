@@ -22,10 +22,10 @@ def download_video(url, nombre_archivo_salida):
         # Ejecutar el comando yt-dlp para descargar el video
         proceso = subprocess.run(['yt-dlp', '-o', nombre_archivo_salida, url], capture_output=True, text=True)
         if proceso.returncode == 0:
-            print(f"El video {nombre_archivo_salida} ha sido descargado correctamente.")
+            print(f"El video {nombre_archivo_salida + ".webm"} ha sido descargado correctamente.")
             return True
         else:
-            print(f"Error al descargar el video {nombre_archivo_salida}: {proceso.stderr}")
+            print(f"Error al descargar el video {nombre_archivo_salida + ".webm"}: {proceso.stderr}")
             return False
     except FileNotFoundError:
         print("Error: yt-dlp no está instalado o no se encuentra en el PATH.")
