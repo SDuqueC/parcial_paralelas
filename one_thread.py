@@ -4,10 +4,15 @@ import datetime
 import lector_json
 import descarga_video
 import extraer_audio
+import time
 
+def calcular_tiempo_ejecucion(tiempo_inicio):
+    tiempo_fin = time.time()
+    tiempo_total = tiempo_fin - tiempo_inicio
+    return tiempo_total
 
-
-
+# Inicio de la medición de tiempo
+tiempo_inicio_total = time.time()
 
 datos_de_descargas_inicial = {
     # "descarga X": {
@@ -33,7 +38,10 @@ urls_y_nombres = lector_json.leer_json('urls_y_nombres.json')
 
 
 
-videos_por_canal = 1
+videos_por_canal = 5
+
+tiempo_inicio_descarga = time.time()
+
 
 for url_y_nombre in urls_y_nombres:
 
@@ -74,3 +82,12 @@ for url_y_nombre in urls_y_nombres:
 
         with open("registro_de_descargas.json", "w") as archivo_json:
             json.dump(datos_de_descargas, archivo_json, indent=4) 
+
+# Fin de la medición de tiempo de ejecución de la descarga y extracción de audio
+tiempo_total_descarga = calcular_tiempo_ejecucion(tiempo_inicio_descarga)
+
+# Fin de la medición de tiempo total de ejecución
+tiempo_total_total = calcular_tiempo_ejecucion(tiempo_inicio_total)
+
+print(f"Tiempo total de descarga y extracción de audio: {tiempo_total_descarga} segundos")
+print(f"Tiempo total de ejecución: {tiempo_total_total} segundos")
