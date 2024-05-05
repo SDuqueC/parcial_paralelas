@@ -11,6 +11,12 @@ import threading
 
 
 
+maximo_de_hilos_activos = int(input("Digite el numero de unidades de procesamiento (hilos): "))
+
+
+
+
+
 videos_por_canal = 1
 
 informacion_de_edscargas = []
@@ -113,6 +119,11 @@ threads = []
 for url_y_nombre in urls_y_nombres:
 
     for numero_de_video in range(1, videos_por_canal + 1): 
+
+        numero_de_hilos_activos = threading.active_count()
+        print("Hilos en ejecucion:", numero_de_hilos_activos)
+        while(numero_de_hilos_activos >= maximo_de_hilos_activos):
+            numero_de_hilos_activos = threading.active_count()
         
         thread = threading.Thread(target = d_v_y_e_a, args=(numero_de_video, url_y_nombre))
         
