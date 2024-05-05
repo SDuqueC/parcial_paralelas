@@ -7,18 +7,35 @@ import extraer_audio
 import threading
 import time
 
+
+
+
+
+maximo_de_hilos_activos = int(input("Digite el numero de unidades de procesamiento (hilos): "))
+
+videos_por_canal = 5
+
+informacion_de_descargas = []
+
+
+
+
 # Función para calcular el tiempo de ejecución
 def calcular_tiempo_ejecucion(tiempo_inicio):
     tiempo_fin = time.time()
     tiempo_total = tiempo_fin - tiempo_inicio
     return tiempo_total
 
-videos_por_canal = 5
 
-informacion_de_descargas = []
+
+
 
 # Inicio de la medición de tiempo total de ejecución
 tiempo_inicio_total = time.time()
+
+
+
+
 
 with open("urls_y_nombres.json", "r") as archivo_json:
     canales = json.load(archivo_json)
@@ -125,6 +142,11 @@ threads = []
 for url_y_nombre in urls_y_nombres:
 
     for numero_de_video in range(1, videos_por_canal + 1): 
+
+        numero_de_hilos_activos = threading.active_count()
+        print("Hilos en ejecucion:", numero_de_hilos_activos)
+        while(numero_de_hilos_activos >= maximo_de_hilos_activos):
+            numero_de_hilos_activos = threading.active_count()
         
         thread = threading.Thread(target = d_v_y_e_a, args=(numero_de_video, url_y_nombre))
         
