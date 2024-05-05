@@ -22,11 +22,11 @@ def download_video(url, nombre_archivo_salida, numero_de_video):
         # Ejecutar el comando yt-dlp para descargar el video
         proceso = subprocess.run(["yt-dlp", "--playlist-item", numero_de_video, "-o", nombre_archivo_salida, url], capture_output=True, text=True)
 
-        # Esta madre es para encontrar la fecha de subida del video a youtube
+        # Encontrar la fecha de subida del video a youtube
         fecha_de_subida_en_consola = subprocess.run(['yt-dlp', '--print', 'upload_date', '--playlist-item', numero_de_video, url], capture_output=True, text=True)
         fecha_de_subida = fecha_de_subida_en_consola.stdout
 
-        # Y esta otra es para encontrar la url del video
+        # Encontrar la url real del video
         id_en_consola = subprocess.run(['yt-dlp', '--print', 'id', '--playlist-item', numero_de_video, url], capture_output=True, text=True)
         url_real = "https://www.youtube.com/watch?v=" + id_en_consola.stdout
 
