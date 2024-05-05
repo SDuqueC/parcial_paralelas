@@ -13,7 +13,7 @@ def leer_json(archivo):
     try:
         with open(archivo, 'r') as f:
             data = json.load(f)
-            urls_y_nombres = [(video["url"], video["nombre"]) for video in data["videos"]]
+            urls_y_nombres = [(video["url"], video["nombre"]) for video in data["canales"]]
         return urls_y_nombres
     except FileNotFoundError:
         print("Error: El archivo JSON no se encontró.")

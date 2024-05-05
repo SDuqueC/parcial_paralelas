@@ -11,7 +11,19 @@ import threading
 
 
 
+videos_por_canal = 1
+
 informacion_de_edscargas = []
+
+with open("urls_y_nombres.json", "r") as archivo_json:
+    canales = json.load(archivo_json)
+
+numero_de_videos = len(canales['canales'])*videos_por_canal
+
+for xd in range(0, numero_de_videos):
+    informacion_de_edscargas.append(0)
+
+cero_a_numero_de_videos_menos_uno = 0
 
 
 
@@ -62,7 +74,9 @@ def d_v_y_e_a(numero_de_video, url_y_nombre):
     #     json.dump(datos_de_descargas, archivo_json, indent=4)
 
     global informacion_de_edscargas
-    informacion_de_edscargas.append(descarga_X)
+    global cero_a_numero_de_videos_menos_uno
+    informacion_de_edscargas[cero_a_numero_de_videos_menos_uno] = descarga_X
+    cero_a_numero_de_videos_menos_uno += 1
 
     return True
 
@@ -98,7 +112,7 @@ threads = []
 
 for url_y_nombre in urls_y_nombres:
 
-    for numero_de_video in range(1, 2): 
+    for numero_de_video in range(1, videos_por_canal + 1): 
         
         thread = threading.Thread(target = d_v_y_e_a, args=(numero_de_video, url_y_nombre))
         

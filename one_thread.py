@@ -33,9 +33,11 @@ urls_y_nombres = lector_json.leer_json('urls_y_nombres.json')
 
 
 
+videos_por_canal = 1
+
 for url_y_nombre in urls_y_nombres:
 
-    for numero_de_video in range(1, 2):
+    for numero_de_video in range(1, videos_por_canal + 1):
 
         numero_de_video_str = str(numero_de_video)
         video = url_y_nombre[1] + numero_de_video_str
