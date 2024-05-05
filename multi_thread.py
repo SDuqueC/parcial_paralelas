@@ -163,9 +163,7 @@ for thread in threads:
 
 
 
-# Fin de la medición de tiempo total de ejecución
-tiempo_total_total = calcular_tiempo_ejecucion(tiempo_inicio_total)
-print(f"Tiempo total de ejecución: {tiempo_total_total} segundos")
+
 
 for informacion_de_descarga in informacion_de_descargas:
 
@@ -179,3 +177,11 @@ for informacion_de_descarga in informacion_de_descargas:
 
     with open("registro_de_descargas.json", "w") as archivo_json:
         json.dump(datos_de_descargas, archivo_json, indent=4)
+
+
+
+
+
+# Fin de la medición de tiempo total de ejecución
+tiempo_total_total = calcular_tiempo_ejecucion(tiempo_inicio_total)
+print(f"Tiempo total de ejecución: {tiempo_total_total} segundos")
