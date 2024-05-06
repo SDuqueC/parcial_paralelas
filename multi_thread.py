@@ -55,8 +55,8 @@ cero_a_numero_de_videos_menos_uno = 0
 # Acciones: 
 #   1. Descargar un video de youtube en formato .webm
 #   2. Extraer el audio del video descargado en formato .mp3 
-#   2. Eliminar el video descargado despues de extraer su audio
-#   3. Agregar la informacion de la descarga a un .json llamado registro_de_descargas / Agregar el diccionario con informcion de la descarga y extraccion a una lista
+#   3. Eliminar el video descargado despues de extraer su audio
+#   4. Agregar el diccionario con informcion de la descarga y extraccion a una lista
 def d_v_y_e_a(numero_de_video, url_y_nombre):
 
     numero_de_video_str = str(numero_de_video)
