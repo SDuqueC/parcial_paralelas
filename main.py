@@ -38,6 +38,7 @@ def main():
     # tiempo=multi_processing.main(8)
     # print(tiempo)
     tiempo = multi_thread.main(8)
+    # tiempo = multi_processing.main(8)
     print(tiempo)
 
 if __name__ == "__main__":

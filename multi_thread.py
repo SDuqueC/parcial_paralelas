@@ -7,6 +7,10 @@ import extraer_audio
 import threading
 import time
 
+# def main(hilos):
+    # maximo_de_hilos_activos = hilos
+maximo_de_hilos_activos = 8
+
 
 # Función para calcular el tiempo de ejecución
 def calcular_tiempo_ejecucion(tiempo_inicio):
@@ -14,129 +18,116 @@ def calcular_tiempo_ejecucion(tiempo_inicio):
     tiempo_total = tiempo_fin - tiempo_inicio
     return tiempo_total
 
+videos_por_canal = 5
 
-def main(hilos):
-    maximo_de_hilos_activos = hilos
+informacion_de_descargas = []
 
-    videos_por_canal = 5
+# Inicio de la medición de tiempo total de ejecución
+tiempo_inicio_total = time.time()
 
-    informacion_de_descargas = []
+with open("urls_y_nombres.json", "r") as archivo_json:
+    canales = json.load(archivo_json)
 
-    # Inicio de la medición de tiempo total de ejecución
-    tiempo_inicio_total = time.time()
+numero_de_videos = len(canales['canales']) * videos_por_canal
 
-    with open("urls_y_nombres.json", "r") as archivo_json:
-        canales = json.load(archivo_json)
+for xd in range(0, numero_de_videos):
+    informacion_de_descargas.append(0)
 
-    numero_de_videos = len(canales['canales']) * videos_por_canal
+cero_a_numero_de_videos_menos_uno = 0
 
-    for xd in range(0, numero_de_videos):
-        informacion_de_descargas.append(0)
+# Nombre: d_v_y_e_a - Sus siglas significan "Descargar Video Y Extraer Audio"
+# Acciones:
+#   1. Descargar un video de youtube en formato .webm
+#   2. Extraer el audio del video descargado en formato .mp3
+#   2. Eliminar el video descargado despues de extraer su audio
+#   3. Agregar el diccionario con informcion de la descarga y extraccion a una estructura de datos
+def d_v_y_e_a(numero_de_video, url_y_nombre):
+    numero_de_video_str = str(numero_de_video)
+    video = url_y_nombre[1] + numero_de_video_str
 
-    cero_a_numero_de_videos_menos_uno = 0
+    # Inicio de la medición de tiempo de ejecución de la descarga y extracción de audio
+    tiempo_inicio_descarga = time.time()
 
-    # Nombre: d_v_y_e_a - Sus siglas significan "Descargar Video Y Extraer Audio"
-    # Acciones:
-    #   1. Descargar un video de youtube en formato .webm
-    #   2. Extraer el audio del video descargado en formato .mp3
-    #   2. Eliminar el video descargado despues de extraer su audio
-    #   3. Agregar la informacion de la descarga a un .json llamado registro_de_descargas / Agregar el diccionario con informcion de la descarga y extraccion a una lista
-    def d_v_y_e_a(numero_de_video, url_y_nombre):
-        numero_de_video_str = str(numero_de_video)
-        video = url_y_nombre[1] + numero_de_video_str
+    fecha_de_subida, url_real = descarga_video.download_video(url_y_nombre[0], video, numero_de_video_str)
 
-        # Inicio de la medición de tiempo de ejecución de la descarga y extracción de audio
-        tiempo_inicio_descarga = time.time()
+    video = video + '.webm'
+    audio = url_y_nombre[1] + numero_de_video_str + '.mp3'
 
-        fecha_de_subida, url_real = descarga_video.download_video(url_y_nombre[0], video, numero_de_video_str)
+    extraer_audio.extract_audio(video, audio)
 
-        video = video + '.webm'
-        audio = url_y_nombre[1] + numero_de_video_str + '.mp3'
+    os.remove(video)
+    print(f"El video {video} ha sido eliminado correctamente.")
 
-        extraer_audio.extract_audio(video, audio)
-
-        os.remove(video)
-        print(f"El video {video} ha sido eliminado correctamente.")
-
-        # with open("registro_de_descargas.json", "r") as archivo_json:
-        #     datos_de_descargas = json.load(archivo_json)
-
-        # numero_descargas = len(datos_de_descargas)
-
-        descarga_X = {
-            "video": video,
-            "audio": audio,
-            "url": url_real,
-            "fecha de subida a youtube": fecha_de_subida,
-            "fecha de descarga": datetime.datetime.now().strftime("%Y-%m-%d %H")
-        }
-
-        # descarga_x = "descarga " + str(numero_descargas + 1)
-        # datos_de_descargas[descarga_x] = descarga_X
-
-        # with open("registro_de_descargas.json", "w") as archivo_json:
-        #     json.dump(datos_de_descargas, archivo_json, indent=4)
-
-        global informacion_de_descargas
-        global cero_a_numero_de_videos_menos_uno
-        informacion_de_descargas[cero_a_numero_de_videos_menos_uno] = descarga_X
-        cero_a_numero_de_videos_menos_uno += 1
-
-        # Fin de la medición de tiempo de ejecución de la descarga y extracción de audio
-        tiempo_total_descarga = calcular_tiempo_ejecucion(tiempo_inicio_descarga)
-        print(f"Tiempo de descarga y extracción para el video {video}: {tiempo_total_descarga} segundos")
-
-        return True
-
-    datos_de_descargas_inicial = {
-        # "descarga X": {
-        #     "video": "video X",
-        #     "url": "url X",
-        #     "fecha de subida a youtube": "fecha de subida X",
-        #     "fecha de descarga": "fecha de descarga X",
-        # }
+    descarga_X = {
+        "video": video,
+        "audio": audio,
+        "url": url_real,
+        "fecha de subida a youtube": fecha_de_subida,
+        "fecha de descarga": datetime.datetime.now().strftime("%Y-%m-%d %H")
     }
 
-    nombre_archivo = "registro_de_descargas.json"
+    global informacion_de_descargas
+    global cero_a_numero_de_videos_menos_uno
+    informacion_de_descargas[cero_a_numero_de_videos_menos_uno] = descarga_X
+    cero_a_numero_de_videos_menos_uno += 1
 
-    with open(nombre_archivo, "w") as archivo_json:
-        json.dump(datos_de_descargas_inicial, archivo_json)
+    # Fin de la medición de tiempo de ejecución de la descarga y extracción de audio
+    tiempo_total_descarga = calcular_tiempo_ejecucion(tiempo_inicio_descarga)
+    print(f"Tiempo de descarga y extracción para el video {video}: {tiempo_total_descarga} segundos")
 
-    urls_y_nombres = lector_json.leer_json('urls_y_nombres.json')
+    return True
 
-    threads = []
+datos_de_descargas_inicial = {
+    # "descarga X": {
+    #     "video": "video X",
+    #     "url": "url X",
+    #     "fecha de subida a youtube": "fecha de subida X",
+    #     "fecha de descarga": "fecha de descarga X",
+    # }
+}
 
-    for url_y_nombre in urls_y_nombres:
+nombre_archivo = "registro_de_descargas.json"
 
-        for numero_de_video in range(1, videos_por_canal + 1):
+with open(nombre_archivo, "w") as archivo_json:
+    json.dump(datos_de_descargas_inicial, archivo_json)
 
+urls_y_nombres = lector_json.leer_json('urls_y_nombres.json')
+
+threads = []
+
+for url_y_nombre in urls_y_nombres:
+
+    for numero_de_video in range(1, videos_por_canal + 1):
+
+        numero_de_hilos_activos = threading.active_count()
+        print("Hilos en ejecucion:", numero_de_hilos_activos)
+        while (numero_de_hilos_activos >= maximo_de_hilos_activos):
             numero_de_hilos_activos = threading.active_count()
-            print("Hilos en ejecucion:", numero_de_hilos_activos)
-            while (numero_de_hilos_activos >= maximo_de_hilos_activos):
-                numero_de_hilos_activos = threading.active_count()
 
-            thread = threading.Thread(target=d_v_y_e_a, args=(numero_de_video, url_y_nombre))
+        thread = threading.Thread(target=d_v_y_e_a, args=(numero_de_video, url_y_nombre))
 
-            thread.start()
+        thread.start()
 
-            threads.append(thread)
+        threads.append(thread)
 
-    for thread in threads:
-        thread.join()
+for thread in threads:
+    thread.join()
 
-    for informacion_de_descarga in informacion_de_descargas:
-        with open("registro_de_descargas.json", "r") as archivo_json:
-            datos_de_descargas = json.load(archivo_json)
+for informacion_de_descarga in informacion_de_descargas:
+    with open("registro_de_descargas.json", "r") as archivo_json:
+        datos_de_descargas = json.load(archivo_json)
 
-        numero_descargas = len(datos_de_descargas)
+    numero_descargas = len(datos_de_descargas)
 
-        descarga_x = "descarga " + str(numero_descargas + 1)
-        datos_de_descargas[descarga_x] = informacion_de_descarga
+    descarga_x = "descarga " + str(numero_descargas + 1)
+    datos_de_descargas[descarga_x] = informacion_de_descarga
 
-        with open("registro_de_descargas.json", "w") as archivo_json:
-            json.dump(datos_de_descargas, archivo_json, indent=4)
+    with open("registro_de_descargas.json", "w") as archivo_json:
+        json.dump(datos_de_descargas, archivo_json, indent=4)
 
-    # Fin de la medición de tiempo total de ejecución
-    tiempo_total_total = calcular_tiempo_ejecucion(tiempo_inicio_total)
-    print(f"Tiempo total de ejecución: {tiempo_total_total} segundos")
-    return tiempo_total_total
+# Fin de la medición de tiempo total de ejecución
+tiempo_total_total = calcular_tiempo_ejecucion(tiempo_inicio_total)
+print(f"Tiempo total de ejecución: {tiempo_total_total} segundos")
+
+
+    # return tiempo_total_total
